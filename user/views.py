@@ -1,9 +1,10 @@
-import json
 import logging
 
-from django.contrib.auth import authenticate, login, logout
 # Create your views here.
-from django.http import JsonResponse
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
 
 from .models import User
 
@@ -18,21 +19,23 @@ def user_registration(request):
     Function for registering user
     """
     try:
-        obj = json.loads(request.body)
+        if request.method == 'GET':
+            return render(request, 'user/registration.html')
+
         if request.method == 'POST':
+            obj = request.POST
             user = User.objects.create_user(first_name=obj.get('first_name'), last_name=obj.get('last_name'),
                                             username=obj.get('username'), password=obj.get('password'),
                                             email=obj.get('email'), mob_number=obj.get('mob_number'),
                                             location=obj.get('location'))
-            return JsonResponse({"Message": "User Registered",
-                                 "data": {"id": user.id, "first_name": user.first_name, "last_name": user.last_name,
-                                          "username": user.username, "email": user.email,
-                                          "mob_number": user.mob_number, "location": user.location}}, status=201)
-        return JsonResponse({"Message": "Method not allowed"}, status=400)
+
+            user.save()
+            return redirect("user_login")
+        return render(request, 'user/registration.html')
+
     except Exception as e:
         print(e)
         logging.error(e)
-        return JsonResponse({"message": str(e), }, status=400)
 
 
 def user_login(request):
@@ -40,20 +43,22 @@ def user_login(request):
     Function for user login
     """
     try:
-        obj = json.loads(request.body)
+        if request.method == 'GET':
+            return render(request, 'user/login.html')
+
         if request.method == 'POST':
-            # user = User.objects.filter(user_name=obj.get('user_name'), password = obj.get('password')).first()
-            user = authenticate(username=obj.get('username'), password=obj.get('password'))
+            username = request.POST['username']
+            password = request.POST['password']
+
+            user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return JsonResponse({"Message": "login successful"}, status=200)
-            return JsonResponse({"Message": "Invalid Credential"}, status=403)
-        return JsonResponse({"Message": "Method not allowed"}, status=400)
+                return HttpResponse('successfully login')
+            return HttpResponse('invalid credential')
+        return render(request, 'user/login.html')
 
     except Exception as e:
         logging.error(e)
-        return JsonResponse({"message": str(e)}, status=400)
-
 
 
 def user_logout(request):
@@ -62,8 +67,9 @@ def user_logout(request):
     """
     try:
         logout(request)
-        return JsonResponse({"Message": "logout successfully"}, status=200)
+        messages.info(request, "You have successfully logged out.")
+        return redirect("user_login")
+
     except Exception as e:
         logging.error(e)
-        return JsonResponse({"message": str(e)}, status=400)
 
