@@ -1,7 +1,7 @@
 import json
 import logging
 
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 from django.http import JsonResponse
 
@@ -45,6 +45,7 @@ def user_login(request):
             # user = User.objects.filter(user_name=obj.get('user_name'), password = obj.get('password')).first()
             user = authenticate(username=obj.get('username'), password=obj.get('password'))
             if user is not None:
+                login(request, user)
                 return JsonResponse({"Message": "login successful"}, status=200)
             return JsonResponse({"Message": "Invalid Credential"}, status=403)
         return JsonResponse({"Message": "Method not allowed"}, status=400)
@@ -52,3 +53,17 @@ def user_login(request):
     except Exception as e:
         logging.error(e)
         return JsonResponse({"message": str(e)}, status=400)
+
+
+
+def user_logout(request):
+    """
+    Function for user logout
+    """
+    try:
+        logout(request)
+        return JsonResponse({"Message": "logout successfully"}, status=200)
+    except Exception as e:
+        logging.error(e)
+        return JsonResponse({"message": str(e)}, status=400)
+
