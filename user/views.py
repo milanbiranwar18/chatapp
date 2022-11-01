@@ -14,6 +14,19 @@ logging.basicConfig(filename="django.log",
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 
+def home_page(request):
+    try:
+       # group = Group.objects.all()
+        return render(request, 'user/home_page.html')
+
+    except Exception as e:
+        print(e)
+        logging.error(e)
+        return HttpResponse("Message",str(e), status=400)
+
+
+
+
 def user_registration(request):
     """
     Function for registering user
@@ -31,11 +44,13 @@ def user_registration(request):
 
             user.save()
             return redirect("user_login")
+        messages.info(request, "You have successfully registered.")
         return render(request, 'user/registration.html')
 
     except Exception as e:
         print(e)
         logging.error(e)
+        return HttpResponse("Message",str(e), status=400)
 
 
 def user_login(request):
@@ -50,15 +65,17 @@ def user_login(request):
             username = request.POST['username']
             password = request.POST['password']
 
-            user = authenticate(username=username, password=password)
+            user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return HttpResponse('successfully login')
-            return HttpResponse('invalid credential')
+                return redirect("home_page")
+            return HttpResponse('invalid login')
+        messages.info(request, "You have successfully logged in.")
         return render(request, 'user/login.html')
 
     except Exception as e:
         logging.error(e)
+        return HttpResponse("Message", str(e), status=400)
 
 
 def user_logout(request):
@@ -72,4 +89,5 @@ def user_logout(request):
 
     except Exception as e:
         logging.error(e)
+        return HttpResponse("Message", str(e), status=400)
 
