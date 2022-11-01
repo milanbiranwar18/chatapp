@@ -16,13 +16,13 @@ logging.basicConfig(filename="django.log",
 
 def home_page(request):
     try:
-       # group = Group.objects.all()
+       
         return render(request, 'user/home_page.html')
 
     except Exception as e:
         print(e)
         logging.error(e)
-        return HttpResponse("Message",str(e), status=400)
+        return render(request, 'user/home_page.html')
 
 
 
@@ -50,7 +50,7 @@ def user_registration(request):
     except Exception as e:
         print(e)
         logging.error(e)
-        return HttpResponse("Message",str(e), status=400)
+       return render(request, 'user/registration.html')
 
 
 def user_login(request):
@@ -68,14 +68,15 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect("home_page")
-            return HttpResponse('invalid login')
-        messages.info(request, "You have successfully logged in.")
+                               if user.is_authenticated:
+                    return redirect("home_page")
+                else:
+                    return redirect("user_login")
         return render(request, 'user/login.html')
 
     except Exception as e:
         logging.error(e)
-        return HttpResponse("Message", str(e), status=400)
+        return render(request, 'user/login.html')
 
 
 def user_logout(request):
@@ -89,5 +90,5 @@ def user_logout(request):
 
     except Exception as e:
         logging.error(e)
-        return HttpResponse("Message", str(e), status=400)
+        
 
