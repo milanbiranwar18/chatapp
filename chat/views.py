@@ -13,6 +13,9 @@ logging.basicConfig(filename="chat.log",
 
 
 def home_page(request):
+    """
+    Function for home page
+    """
     try:
         if request.method == 'GET':
             group = Group.objects.all().order_by('id')[0:]
@@ -25,6 +28,9 @@ def home_page(request):
 
 
 def add_group(request):
+    """
+    Function for add group
+    """
     try:
 
         if request.method == 'POST':
@@ -40,16 +46,28 @@ def add_group(request):
 
 
 def update_group(request, id):
-    if request.method == 'POST':
-        group = Group.objects.get(id=id)
-        group.name = request.POST.get('name')
-        group.save()
-        return redirect("home_page")
-    return render(request, 'user/update.html')
+    """
+    Program for update group
+    """
+    try:
+        if request.method == 'POST':
+            group = Group.objects.get(id=id)
+            group.name = request.POST.get('name')
+            group.save()
+            return redirect("home_page")
+        return render(request, 'user/update.html')
+    except Exception as e:
+        logging.error(e)
+        return render(request, 'user/update.html')
 
 
 def delete_group(request, id):
-    group = Group.objects.get(id=id)
-    group.delete()
-    # return HttpResponseRedirect(reverse("home_page"))
-    return redirect("home_page")
+    """
+    Program for delete group
+    """
+    try:
+        group = Group.objects.get(id=id)
+        group.delete()
+        return redirect("home_page")
+    except Exception as e:
+        logging.error(e)
