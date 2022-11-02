@@ -5,7 +5,49 @@
     <title>Home Page</title>
 </head>
 <body>
+<form action="" method="post" novalidate>
 
-<a href="{% url 'user_logout' %}">Logout</a> <br><br>
+
+
+    <a href="{% url 'add_group' %}">Create New Group</a> <br><br>
+
+
+
+
+<table border="1">
+<thead>
+    <tr>
+    <th>Group id</th>
+    <th>Group Name</th>
+    <th>Edit</th>
+    <th>Delete</th>
+    </tr>
+</thead>
+<tbody>
+    {% for sts in group %}
+    <tr>
+    <td>{{sts.id}}</td>
+    <td>{{sts.name}}</td>
+
+    <td><a href="{% url 'update_group' id=sts.id %}">Edit</a></td>
+        <td><a href="/chat/delete_group/{{ sts.id }}">Delete</a></td>
+
+    </tr>
+    {% endfor %}
+
+
+
+</tbody>
+</table>
+
+</form>
+
+
+    <br><br>
+    <a href="{% url 'user_logout' %}">Logout</a> <br><br>
+
+
+
+
 </body>
 </html>

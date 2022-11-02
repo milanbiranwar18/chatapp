@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
+from chat.models import Group
 from .models import User
 
 logging.basicConfig(filename="django.log",
@@ -14,15 +15,15 @@ logging.basicConfig(filename="django.log",
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 
-def home_page(request):
-    try:
-       # group = Group.objects.all()
-        return render(request, 'user/home_page.html')
-
-    except Exception as e:
-        print(e)
-        logging.error(e)
-        return HttpResponse("Message",str(e), status=400)
+# def home_page(request):
+#     try:
+#         st = Group.objects.all().order_by('id')[0:]
+#         return render(request, 'user/home_page.html', {'st':st})
+#
+#     except Exception as e:
+#         print(e)
+#         logging.error(e)
+#         return render(request, 'user/home_page.html')
 
 
 
@@ -50,7 +51,7 @@ def user_registration(request):
     except Exception as e:
         print(e)
         logging.error(e)
-        return HttpResponse("Message",str(e), status=400)
+        return render(request, 'user/registration.html')
 
 
 def user_login(request):
@@ -68,14 +69,15 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect("home_page")
-            return HttpResponse('invalid login')
-        messages.info(request, "You have successfully logged in.")
+                if user.is_authenticated:
+                    return redirect("home_page")
+                else:
+                    return redirect("user_login")
         return render(request, 'user/login.html')
 
     except Exception as e:
         logging.error(e)
-        return HttpResponse("Message", str(e), status=400)
+        return render(request, 'user/login.html')
 
 
 def user_logout(request):
@@ -89,5 +91,5 @@ def user_logout(request):
 
     except Exception as e:
         logging.error(e)
-        return HttpResponse("Message", str(e), status=400)
+
 
