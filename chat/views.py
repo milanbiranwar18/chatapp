@@ -1,10 +1,12 @@
 import logging
 
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from chat.models import Group
 
 # Create your views here.
+from user.models import User
 
 logging.basicConfig(filename="chat.log",
                     filemode='a',
@@ -71,3 +73,21 @@ def delete_group(request, id):
         return redirect("home_page")
     except Exception as e:
         logging.error(e)
+
+
+def view_group(request, id):
+    if request.method == 'GET':
+        group = Group.members.all().order_by('id')[0:]
+        #return render(request, 'user/view_group.html', {'group': group})
+
+
+def add_members(request, id):
+
+    if request.method == 'GET':
+        group = User.objects.all().order_by('id')[0:]
+
+        return render(request, 'user/add_members.html', {'group': group})
+
+
+
+
