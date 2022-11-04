@@ -6,14 +6,7 @@
 </head>
 <body>
 <form action="" method="post" novalidate>
-
-
-
     <a href="{% url 'add_group' %}">Create New Group</a> <br><br>
-
-
-
-
 <table border="1">
 <thead>
     <tr>
@@ -22,40 +15,26 @@
     <th>Edit Group</th>
     <th>Delete Group</th>
     <th>Add Members To Group</th>
-    <th>View Group</th>
+    <th>View Members</th>
     </tr>
 </thead>
 <tbody>
-    {% for sts in group %}
+    {% for sts in group_list %}
     <tr>
     <td>{{sts.id}}</td>
     <td>{{sts.name}}</td>
 
-
     <td><a href="{% url 'update_group' id=sts.id %}">Edit</a></td>
         <td><a href="/chat/delete_group/{{ sts.id }}">Delete</a></td>
         <td><a href="/chat/add_members/{{ sts.id }}">Add Members</a></td>
-        <td><a href="/chat/view_group/{{ sts.id }}">View Group</a></td>
-
-
-
-
+        <td><a href="/chat/view_group/{{ sts.id }}">View Members</a></td>
     </tr>
     {% endfor %}
-
-
-
 </tbody>
 </table>
 
 </form>
-
-
     <br><br>
     <a href="{% url 'user_logout' %}">Logout</a> <br><br>
-
-
-
-
 </body>
 </html>

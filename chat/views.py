@@ -20,11 +20,10 @@ def home_page(request):
     """
     try:
         if request.method == 'GET':
-            group = Group.objects.all().order_by('id')[0:]
-            return render(request, 'user/home_page.html', {'group': group})
+            group_list = Group.objects.filter(user=request.user).order_by('id')
+            return render(request, 'user/home_page.html', {'group_list': group_list})
 
     except Exception as e:
-        print(e)
         logging.error(e)
         return render(request, 'user/home_page.html')
 
@@ -36,15 +35,14 @@ def add_group(request):
     try:
 
         if request.method == 'POST':
-            obj = request.POST
-            group = Group.objects.create(name=obj.get('name'), user=request.user)
-            group.save()
+            data = request.POST
+            group = Group.objects.create(name=data.get('name'), user=request.user)
             return redirect("home_page")
         return render(request, 'user/add_group.html')
 
     except Exception as e:
-        print(e)
         logging.error(e)
+        return render(request, 'user/home_page.html')
 
 
 def update_group(request, id):
@@ -53,9 +51,9 @@ def update_group(request, id):
     """
     try:
         if request.method == 'POST':
-            group = Group.objects.get(id=id)
-            group.name = request.POST.get('name')
-            group.save()
+            data = Group.objects.get(id=id)
+            data.name = request.POST.get('name')
+            data.save()
             return redirect("home_page")
         return render(request, 'user/update.html')
     except Exception as e:
@@ -68,26 +66,46 @@ def delete_group(request, id):
     Program for delete group
     """
     try:
-        group = Group.objects.get(id=id)
-        group.delete()
+        data = Group.objects.get(id=id)
+        data.delete()
         return redirect("home_page")
     except Exception as e:
         logging.error(e)
 
 
-def view_group(request, id):
-    if request.method == 'GET':
-        group = Group.members.all().order_by('id')[0:]
-        #return render(request, 'user/view_group.html', {'group': group})
-
 
 def add_members(request, id):
+    try:
+        if request.method == 'GET':
+            user_list = User.objects.all().exclude(id=request.user.id)
+            return render(request, 'user/add_members.html', {"user_list":user_list})
+        if request.method == 'POST':
+            group = Group.objects.get(id=id)
+            group.members.add(*request.POST.get("members"))
+            return redirect("home_page")
+        return render(request, 'user/add_members.html')
+    except Exception as e:
+        logging.error(e)
+        return render(request, 'user/add_members.html')
 
-    if request.method == 'GET':
-        group = User.objects.all().order_by('id')[0:]
-
-        return render(request, 'user/add_members.html', {'group': group})
 
 
+# def add_members(request, group_id, user_id):
+#     try:
+#         if request.method == 'GET':
+#             user_list = User.objects.all().exclude(id=request.user.id)
+#             return render(request, 'user/add_members.html', {"user_list":user_list})
+#         if request.method == 'POST':
+#             group = Group.objects.get(id=group_id, user=request.user)
+#             user=User.objects.get(id=user_id)
+#             group.members.add(user)
+#             return redirect("home_page")
+#         return render(request, 'user/add_members.html')
+#     except Exception as e:
+#         logging.error(e)
+#         return render(request, 'user/add_members.html')
 
 
+
+def view_memnbers(request, id):
+    pass

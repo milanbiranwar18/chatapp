@@ -15,18 +15,6 @@ logging.basicConfig(filename="django.log",
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 
-# def home_page(request):
-#     try:
-#         st = Group.objects.all().order_by('id')[0:]
-#         return render(request, 'user/home_page.html', {'st':st})
-#
-#     except Exception as e:
-#         print(e)
-#         logging.error(e)
-#         return render(request, 'user/home_page.html')
-
-
-
 
 def user_registration(request):
     """
