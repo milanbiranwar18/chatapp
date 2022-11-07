@@ -1,14 +1,12 @@
 import logging
 
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from chat.models import Group
-
 # Create your views here.
 from user.models import User
 
-logging.basicConfig(filename="chat.log",
+logging.basicConfig(filename="django.log",
                     filemode='a',
                     format='%(asctime)s %(levelname)s-%(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
@@ -42,7 +40,7 @@ def add_group(request):
 
     except Exception as e:
         logging.error(e)
-        return render(request, 'user/home_page.html')
+        return render(request, 'user/add_group.html')
 
 
 def update_group(request, id):
@@ -71,41 +69,43 @@ def delete_group(request, id):
         return redirect("home_page")
     except Exception as e:
         logging.error(e)
+        return render(request, 'user/home_page.html')
 
+
+def view_group(request, id):
+    """
+    Function to display members of a group
+    """
+    try:
+        if request.method == 'GET':
+            data = Group.objects.get(id=id)
+            member_list = data.members.all()
+            return render(request, 'user/view_group.html', {'member_list': member_list})
+    except Exception as e:
+        logging.error(e)
+        return render(request, 'user/view_group.html')
 
 
 def add_members(request, id):
     try:
         if request.method == 'GET':
             user_list = User.objects.all().exclude(id=request.user.id)
-            return render(request, 'user/add_members.html', {"user_list":user_list})
+            return render(request, 'user/add_members.html', {"user_list": user_list})
         if request.method == 'POST':
-            group = Group.objects.get(id=id)
-            group.members.add(*request.POST.get("members"))
-            return redirect("home_page")
+            data = Group.objects.get(id=id)
+            data.members.add(*request.POST.get(id))
+            return redirect("view_group")
         return render(request, 'user/add_members.html')
     except Exception as e:
         logging.error(e)
         return render(request, 'user/add_members.html')
 
 
-
-# def add_members(request, group_id, user_id):
-#     try:
-#         if request.method == 'GET':
-#             user_list = User.objects.all().exclude(id=request.user.id)
-#             return render(request, 'user/add_members.html', {"user_list":user_list})
-#         if request.method == 'POST':
-#             group = Group.objects.get(id=group_id, user=request.user)
-#             user=User.objects.get(id=user_id)
-#             group.members.add(user)
-#             return redirect("home_page")
-#         return render(request, 'user/add_members.html')
-#     except Exception as e:
-#         logging.error(e)
-#         return render(request, 'user/add_members.html')
-
-
-
-def view_memnbers(request, id):
-    pass
+def delete_members(request, id):
+    try:
+        data = Group.objects.get(id=id)
+        data.members.delete()
+        return redirect("view_group")
+    except Exception as e:
+        logging.error(e)
+        return render(request, 'user/view_group.html')

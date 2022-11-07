@@ -6,7 +6,6 @@
 </head>
 <body>
 <form action="" method="post" novalidate>
-
     <table border="1">
 <thead>
     <tr>
@@ -14,7 +13,6 @@
     <th>First Name</th>
     <th>Last Name</th>
     <th>Select Members</th>
-
     </tr>
 </thead>
 <tbody>
@@ -22,19 +20,16 @@
     <tr>
     <td>{{sts.id}}</td>
     <td>{{sts.first_name}}</td>
-        <td>{{sts.last_name}}</td>
-
+    <td>{{sts.last_name}}</td>
     <td><a href="{% url 'add_members' id=sts.id %}">
-        <input class = "checkbox" type = "checkbox" id = "members" name="members" value="members">
-
+    <input class = "checkbox" type = "checkbox" id = "members" name="members" value="members">
     </a></td>
     </tr>
     {% endfor %}
-
 </tbody>
 </table>
     <br>
-     <input type="submit" value="Add"> <br><br>
+    <input type="submit" value="Add"> <br><br>
 </form>
 </body>
 </html>

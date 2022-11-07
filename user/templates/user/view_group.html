@@ -5,8 +5,29 @@
     <title>View Group</title>
 </head>
 <body>
-
-
+<form action="" method="get" novalidate>
+    <table border="1">
+<thead>
+    <tr>
+    <th>Member id</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Delete Members</th>
+    </tr>
+</thead>
+<tbody>
+    {% for sts in member_list %}
+    <tr>
+    <td>{{sts.id}}</td>
+    <td>{{sts.first_name}}</td>
+    <td>{{sts.last_name}}</td>
+    <td><a href="/chat/delete_members/{{ sts.id }}">Delete</a></td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+    <br><br>
+     <a href="{% url 'home_page' %}">Home Page</a> <br><br>
+</form>
 </body>
-
 </html>
