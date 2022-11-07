@@ -79,7 +79,7 @@ def view_group(request, id):
     try:
         if request.method == 'GET':
             data = Group.objects.get(id=id)
-            member_list = data.members.all()
+            member_list = data.members.all().values()
             return render(request, 'user/view_group.html', {'member_list': member_list})
     except Exception as e:
         logging.error(e)
@@ -87,14 +87,15 @@ def view_group(request, id):
 
 
 def add_members(request, id):
+    #print(request.POST)
     try:
         if request.method == 'GET':
             user_list = User.objects.all().exclude(id=request.user.id)
             return render(request, 'user/add_members.html', {"user_list": user_list})
         if request.method == 'POST':
             data = Group.objects.get(id=id)
-            data.members.add(*request.POST.get(id))
-            return redirect("view_group")
+            data.members.add(*request.POST.get('members'))
+            return redirect("home_page")
         return render(request, 'user/add_members.html')
     except Exception as e:
         logging.error(e)

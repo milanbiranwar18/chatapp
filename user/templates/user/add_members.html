@@ -5,29 +5,27 @@
     <title>Add Members</title>
 </head>
 <body>
-<form action="" method="post" novalidate>
+<form method="post">
     <table border="1">
-<thead>
-    <tr>
-    <th>Member id</th>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th>Select Members</th>
-    </tr>
-</thead>
-<tbody>
-    {% for sts in user_list %}
-    <tr>
-    <td>{{sts.id}}</td>
-    <td>{{sts.first_name}}</td>
-    <td>{{sts.last_name}}</td>
-    <td><a href="{% url 'add_members' id=sts.id %}">
-    <input class = "checkbox" type = "checkbox" id = "members" name="members" value="members">
-    </a></td>
-    </tr>
-    {% endfor %}
-</tbody>
-</table>
+        <thead>
+        <tr>
+            <th>Member id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Select Members</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for sts in user_list %}
+        <tr>
+            <td>{{sts.id}}</td>
+            <td>{{sts.first_name}}</td>
+            <td>{{sts.last_name}}</td>
+            <td> <input name="members" type="checkbox" value="{{sts.id}}"></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
     <br>
     <input type="submit" value="Add"> <br><br>
 </form>
