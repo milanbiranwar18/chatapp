@@ -3,7 +3,6 @@ import logging
 from django.shortcuts import render, redirect
 
 from chat.models import Group
-# Create your views here.
 from user.models import User
 
 logging.basicConfig(filename="django.log",
@@ -87,7 +86,9 @@ def view_group(request, id):
 
 
 def add_members(request, id):
-    #print(request.POST)
+    """
+    Function for adding members in group
+    """
     try:
         if request.method == 'GET':
             user_list = User.objects.all().exclude(id=request.user.id)
@@ -103,6 +104,9 @@ def add_members(request, id):
 
 
 def delete_members(request, id):
+    """
+    Function for removing members from group
+    """
     try:
         data = Group.objects.get(id=id)
         data.members.delete()
