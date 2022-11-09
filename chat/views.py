@@ -89,6 +89,7 @@ def add_members(request, id):
     """
     Function for adding members in group
     """
+    # print(request.POST)
     try:
         if request.method == 'GET':
             user_list = User.objects.all().exclude(id=request.user.id)

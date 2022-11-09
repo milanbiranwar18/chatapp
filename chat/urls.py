@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views, room_view
 
 urlpatterns = [
     path('add_group/', views.add_group, name='add_group'),
@@ -9,5 +9,7 @@ urlpatterns = [
     path('add_members/<int:id>/', views.add_members, name= 'add_members'),
     path('view_group/<int:id>/', views.view_group, name= 'view_group'),
     path('delete_members/<int:id>/', views.delete_members, name='delete_members'),
+    path("", room_view.index, name="index"),
+    path("<str:room_name>/", room_view.room, name="room"),
 
     ]
