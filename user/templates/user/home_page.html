@@ -22,7 +22,7 @@
     {% for sts in group_list %}
     <tr>
     <td>{{sts.id}}</td>
-    <td>{{sts.name}}</td>
+    <td><a href="{% url 'room' room_name=sts.name %}" >{{sts.name}}</a></td>
     <td><a href="{% url 'update_group' id=sts.id %}">Edit</a></td>
     <td><a href="/chat/delete_group/{{ sts.id }}">Delete</a></td>
     <td><a href="/chat/add_members/{{ sts.id }}">Add Members</a></td>
