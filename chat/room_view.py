@@ -8,11 +8,7 @@ from chat.models import Messages
 
 @login_required
 def index(request):
-    try:
-        return render(request, "chat/index.html")
-    except Exception as e:
-        logging.error(e)
-        return render(request, "chat/index.html")
+    return render(request, "chat/index.html")
 
 
 @login_required
