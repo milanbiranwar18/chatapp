@@ -1,5 +1,6 @@
 import logging
 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from chat.models import Group
@@ -11,6 +12,7 @@ logging.basicConfig(filename="django.log",
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 
+@login_required
 def home_page(request):
     """
     Function for home page
@@ -25,6 +27,7 @@ def home_page(request):
         return render(request, 'user/home_page.html')
 
 
+@login_required
 def add_group(request):
     """
     Function for add group
@@ -42,6 +45,7 @@ def add_group(request):
         return render(request, 'user/add_group.html')
 
 
+@login_required
 def update_group(request, id):
     """
     Program for update group
@@ -58,6 +62,7 @@ def update_group(request, id):
         return render(request, 'user/update.html')
 
 
+@login_required
 def delete_group(request, id):
     """
     Program for delete group
@@ -71,6 +76,7 @@ def delete_group(request, id):
         return render(request, 'user/home_page.html')
 
 
+@login_required
 def view_group(request, id):
     """
     Function to display members of a group
@@ -85,6 +91,7 @@ def view_group(request, id):
         return render(request, 'user/view_group.html')
 
 
+@login_required
 def add_members(request, id):
     """
     Function for adding members in group
@@ -104,6 +111,7 @@ def add_members(request, id):
         return render(request, 'user/add_members.html')
 
 
+@login_required
 def delete_members(request, id):
     """
     Function for removing members from group

@@ -3,17 +3,16 @@ import logging
 # Create your views here.
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
-from chat.models import Group
 from .models import User
 
 logging.basicConfig(filename="django.log",
                     filemode='a',
                     format='%(asctime)s %(levelname)s-%(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
-
 
 
 def user_registration(request):
@@ -61,6 +60,8 @@ def user_login(request):
                     return redirect("home_page")
                 else:
                     return redirect("user_login")
+            else:
+                return HttpResponse('login required')
         return render(request, 'user/login.html')
 
     except Exception as e:
@@ -68,6 +69,7 @@ def user_login(request):
         return render(request, 'user/login.html')
 
 
+@login_required
 def user_logout(request):
     """
     Function for user logout
@@ -79,5 +81,3 @@ def user_logout(request):
 
     except Exception as e:
         logging.error(e)
-
-
